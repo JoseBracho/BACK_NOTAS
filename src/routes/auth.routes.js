@@ -2,7 +2,8 @@ const { Router } = require("express");
 const { check } = require("express-validator");
 const route = Router()
 
-const { login, register } = require("../controllers/auth.controllers");
+const { login, register, getUserData, deleteUser } = require("../controllers/auth.controllers");
+const validateToken = require("../middlewares/validateToken");
 const { 
     nameValidator, 
     passwordValidator, 
@@ -14,6 +15,9 @@ route.post('/login', [
     check("password", "You must enter the password").not().isEmpty(),
     validateFields
 ],login)
+
+route.get('/user', validateToken, getUserData);
+route.delete('/user', validateToken, deleteUser);
 
 route.post('/register', [
     check("userName", "Please enter the userName").not().isEmpty(),

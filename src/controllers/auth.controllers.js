@@ -2,6 +2,8 @@ const bcrypt = require("bcrypt");
 
 const generateJsonwebtoken = require("../helpers/generateJsonwebtoken");
 const User = require("../models/user.models");
+const Note = require("../models/noteModel");
+const Category = require("../models/categoryModels");
 
 const login = async (req, res) => {
     const body = req.body;
@@ -28,6 +30,39 @@ const login = async (req, res) => {
     }    
 }
 
+const getUserData = async (req, res) => {
+  try {
+      const userId = req.user.id;
+      const user = await User.findById(userId).select('-password');
+      if (!user) {
+          return res.status(404).json({ msg: 'User not found' });
+      }
+      res.json({
+        done: true,
+        user
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Server Error');
+  }
+};
+
+const deleteUser = async (req, res) => {
+  try {
+      const userId = req.user.id;
+      const user = await User.findByIdAndDelete(userId);
+      if (!user) {
+          return res.status(404).json({ msg: 'User not found' });
+      }
+      await Note.deleteMany({ user: userId });
+      await Category.deleteMany({ user: userId });
+      res.json({ msg: 'User account has been successfully deleted' });
+  } catch (error) {
+      console.error(error);
+      res.status(500).send('Server Error');
+  }
+};
+
 const register = async (req, res) => {
     const body = req.body
     body.password = bcrypt.hashSync(body.password, 10);
@@ -47,5 +82,7 @@ const register = async (req, res) => {
 }
 module.exports = {
     login,
-    register
+    register,
+    getUserData,
+    deleteUser
 }
