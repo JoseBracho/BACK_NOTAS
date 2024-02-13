@@ -28,6 +28,7 @@ class Serve{
     routes(){
         this.app.use('/auth', require("./routes/auth.routes")); 
         this.app.use('/app', require("./routes/categories.routes")); 
+        this.app.use('/app', require("./routes/notes.routes")); 
     }
 }
 module.exports = Serve;

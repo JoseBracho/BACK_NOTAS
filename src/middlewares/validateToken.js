@@ -15,7 +15,6 @@ const validateToken = (req = request, res = response, next) => {
        req.user.id = id;
        next();
     }catch(err){
-        console.log(err)
         res.status(401).json({
             expire: true,
             msg: "invalid token"

@@ -59,13 +59,12 @@ const updateCategory = async (req, res) => {
 const deleteCategory = async (req, res) => {
     try {
         const category = await Category.findById(req.params.id);
-
-        if (!category) {
-            return res.status(404).json({ msg: 'Category not found' });
-        }
         const userId = req.user.id;
         if (category.user.toString() !== userId) {
             return res.status(401).json({ msg: 'User not authorized' });
+        }
+        if (!category) {
+            return res.status(404).json({ msg: 'Category not found' });
         }
         await category.remove();
         res.json({ msg: 'Category removed' });

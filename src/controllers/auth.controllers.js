@@ -3,7 +3,7 @@ const bcrypt = require("bcrypt");
 const generateJsonwebtoken = require("../helpers/generateJsonwebtoken");
 const User = require("../models/user.models");
 const Note = require("../models/noteModel");
-const Category = require("../models/categoryModels");
+const Category = require("../models/categoryModel");
 
 const login = async (req, res) => {
     const body = req.body;
